@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"node server/server.js\" ",
-    "lite": "lite-server",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "typings": "typings"
@@ -23,6 +22,8 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "nodemon": "^1.12.4",
     "reflect-metadata": "^0.1.8",
     "rxjs": "^5.1.0",
     "systemjs": "^0.20.19",
@@ -36,4 +37,3 @@
     "typescript": "^2.6.2"
   }
 }
-
