@@ -18,8 +18,8 @@ Notes list:
 })
 
 export class NotesComponent {
-    private notesUrl = 'http://localhost:8080/notes';  // URL to web api
-    text: string
+    private notesUrl = '/notes';  // URL to web api
+    text: string;
 
     constructor(private http: Http) {
         this.getNotes().then(notes => {
@@ -28,6 +28,10 @@ export class NotesComponent {
         });
     }
 
+    addNote(note:Note) {
+        this.http.post(this.notesUrl, note).toPromise()
+            .then(response => console.log("note sent, response", response) );
+    }
 
     getNotes(): Promise<Note[]> {
         return this.http.get(this.notesUrl)
@@ -39,6 +43,7 @@ export class NotesComponent {
         let note = {text: this.text}
         this.notes.push(note);
         this.text = "";
+        this.addNote(note);
     }
 
     remove(idx) {
