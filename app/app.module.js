@@ -12,13 +12,14 @@ var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
 var http_1 = require("@angular/http");
 var notes_component_1 = require("./notes.component");
+var sections_component_1 = require("./sections.component");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, http_1.HttpModule, forms_1.FormsModule],
-            declarations: [app_component_1.AppComponent, notes_component_1.NotesComponent],
+            declarations: [app_component_1.AppComponent, notes_component_1.NotesComponent, sections_component_1.SectionsComponent],
             bootstrap: [app_component_1.AppComponent]
         })
     ], AppModule);

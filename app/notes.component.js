@@ -13,20 +13,20 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 var http_2 = require("@angular/http");
+require("rxjs/add/operator/map");
+require("rxjs/Rx");
 var NotesComponent = /** @class */ (function () {
     function NotesComponent(http) {
         this.http = http;
         this.notesUrl = '/notes'; // URL to web api
         this.notes = [];
-        this.readNotes();
-        // this.getNotes().then(notes => {
-        //     this.notes = notes
-        //     console.log(notes);
-        // });
     }
+    NotesComponent.prototype.ngOnChanges = function () {
+        this.readNotes();
+    };
     NotesComponent.prototype.readNotes = function () {
         var _this = this;
-        this.getNotes().then(function (notes) {
+        this.getNotes().subscribe(function (notes) {
             _this.notes = notes;
         });
     };
@@ -39,12 +39,17 @@ var NotesComponent = /** @class */ (function () {
         });
     };
     NotesComponent.prototype.getNotes = function () {
-        return this.http.get(this.notesUrl)
-            .toPromise()
-            .then(function (response) { return response.json(); });
+        // return this.http.get(this.notesUrl)
+        //     .toPromise()
+        //     .then(response => response.json() as Note[]);
+        //
+        var params = new http_2.URLSearchParams();
+        params.set('section', this.section);
+        return this.http.get(this.notesUrl, { search: params })
+            .map(function (response) { return response.json(); });
     };
     NotesComponent.prototype.add = function () {
-        var note = { _id: this.text, text: this.text, lastUpdated: this.lastUpdated };
+        var note = { _id: this.text, text: this.text, lastUpdated: this.lastUpdated, section: this.section };
         // this.notes.push(note);
         // this.text = "";
         note.lastUpdated = (new Date()).getTime();
@@ -61,10 +66,14 @@ var NotesComponent = /** @class */ (function () {
             _this.readNotes();
         });
     };
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], NotesComponent.prototype, "section", void 0);
     NotesComponent = __decorate([
         core_1.Component({
             selector: 'notes',
-            template: "\n<div class=\"container\">\n<textarea [(ngModel)]=\"text\" ></textarea>\n<button (click)=\"add()\" class=\"btn btn-success\" >Add</button>\n<br/>\nNotes list: \n<ul>\n    <li *ngFor=\"let note of notes\">\n        {{note.text}}  {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}} <button class=\"btn btn-danger\" (click)=\"remove(note._id)\">remove</button>\n    </li>\n</ul>\n</div>"
+            templateUrl: 'app/notes.component.html'
         }),
         __metadata("design:paramtypes", [http_1.Http])
     ], NotesComponent);

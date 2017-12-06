@@ -1,42 +1,35 @@
-import {Component} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import {URLSearchParams} from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/Rx';
+import {Observable} from 'rxjs/Rx';
+import {notEqual} from "assert";
+
 
 @Component({
     selector: 'notes',
-    template: `
-<div class="container">
-<textarea [(ngModel)]="text" ></textarea>
-<button (click)="add()" class="btn btn-success" >Add</button>
-<br/>
-Notes list: 
-<ul>
-    <li *ngFor="let note of notes">
-        {{note.text}}  {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}} <button class="btn btn-danger" (click)="remove(note._id)">remove</button>
-    </li>
-</ul>
-</div>`
+    templateUrl: 'app/notes.component.html'
 })
 
-export class NotesComponent {
+export class NotesComponent implements OnChanges {
     private notesUrl = '/notes';  // URL to web api
     text: string;
     lastUpdated: number;
     notes: Note[] = [];
+    @Input() section: string;
 
-    constructor(private http: Http) {
+    constructor(private http: Http){
 
+    }
+
+    ngOnChanges() {
         this.readNotes();
-
-        // this.getNotes().then(notes => {
-        //     this.notes = notes
-        //     console.log(notes);
-        // });
     }
 
     readNotes() {
-        this.getNotes().then(notes => {
+        this.getNotes().subscribe(notes => { //updated then to subscribe
             this.notes = notes;
         });
     }
@@ -50,14 +43,19 @@ export class NotesComponent {
 
     }
 
-    getNotes(): Promise<Note[]> {
-        return this.http.get(this.notesUrl)
-            .toPromise()
-            .then(response => response.json() as Note[]);
+    getNotes(): Observable<Note[]> { //updated from Promise Observable
+        // return this.http.get(this.notesUrl)
+        //     .toPromise()
+        //     .then(response => response.json() as Note[]);
+        //
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('section', this.section);
+        return this.http.get(this.notesUrl, {search: params})
+            .map(response => response.json() as Note[]);
     }
 
     add() {
-        let note = {_id: this.text, text: this.text, lastUpdated: this.lastUpdated};
+        let note = {_id: this.text, text: this.text, lastUpdated: this.lastUpdated, section: this.section};
         // this.notes.push(note);
         // this.text = "";
         note.lastUpdated = (new Date()).getTime();
@@ -83,4 +81,5 @@ interface Note {
     _id: string;
     text: string;
     lastUpdated: number;
+    section: string;
 }

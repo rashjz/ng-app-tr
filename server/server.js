@@ -30,6 +30,10 @@ db.open(function(err){
         db.notes = notes;
     });
 
+    db.collection('sections', function(error, sections) {
+        db.sections = sections;
+    });
+
     if (err) console.log(err);
     else console.log("mongo db is opened!");
 });
@@ -74,4 +78,12 @@ app.delete("/notes", function(req,res) {
             res.send("Success");
         }
     })
+});
+
+
+//sections
+app.get("/sections", function(req,res) {
+    db.sections.find(req.query).toArray(function(err, items) {
+        res.send(items);
+    });
 });
