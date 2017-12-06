@@ -1,36 +1,53 @@
 import {Component} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import {URLSearchParams} from '@angular/http';
 
 @Component({
     selector: 'notes',
     template: `
-
+<div class="container">
 <textarea [(ngModel)]="text" ></textarea>
-<button (click)="add()">Add</button>
+<button (click)="add()" class="btn btn-success" >Add</button>
 <br/>
 Notes list: 
 <ul>
-    <li *ngFor="let note of notes; let i=index">
-        {{note.text}} <button (click)="remove(i)">remove</button>
+    <li *ngFor="let note of notes">
+        {{note.text}}  {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}} <button class="btn btn-danger" (click)="remove(note._id)">remove</button>
     </li>
-</ul>`
+</ul>
+</div>`
 })
 
 export class NotesComponent {
     private notesUrl = '/notes';  // URL to web api
     text: string;
+    lastUpdated: number;
+    notes: Note[] = [];
 
     constructor(private http: Http) {
+
+        this.readNotes();
+
+        // this.getNotes().then(notes => {
+        //     this.notes = notes
+        //     console.log(notes);
+        // });
+    }
+
+    readNotes() {
         this.getNotes().then(notes => {
-            this.notes = notes
-            console.log(notes);
+            this.notes = notes;
         });
     }
 
-    addNote(note:Note) {
+    addNote(note: Note) {
         this.http.post(this.notesUrl, note).toPromise()
-            .then(response => console.log("note sent, response", response) );
+            .then(response => {
+                console.log("note sent, response", response);
+                this.readNotes();
+            });
+
     }
 
     getNotes(): Promise<Note[]> {
@@ -40,22 +57,30 @@ export class NotesComponent {
     }
 
     add() {
-        let note = {text: this.text}
-        this.notes.push(note);
-        this.text = "";
+        let note = {_id: this.text, text: this.text, lastUpdated: this.lastUpdated};
+        // this.notes.push(note);
+        // this.text = "";
+        note.lastUpdated = (new Date()).getTime();
         this.addNote(note);
     }
 
-    remove(idx) {
-        this.notes.splice(idx, 1);
+
+    remove(id: string) {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('id', id);
+        this.http.delete(this.notesUrl, {search: params})
+            .toPromise()
+            .then(response => {
+                console.log(
+                    `note with id ${id} removed, response`, response);
+                this.readNotes();
+            });
     }
 
-    notes: Note[] = [
-        {text: "Note one"},
-        {text: "Note two"}
-    ]
 
 }
 interface Note {
+    _id: string;
     text: string;
+    lastUpdated: number;
 }
