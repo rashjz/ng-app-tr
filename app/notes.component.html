@@ -1,5 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
+        <!--<a [routerLink]="['/viewSection',section]">{{section}}</a>-->
         <h3 class="panel-title">Add your note to section {{section}}</h3>
     </div>
 
@@ -16,7 +17,8 @@
 
     <ul class="list-group" ng-repeat="note in notes">
         <li *ngFor="let note of notes" class="list-group-item">
-            {{note.text}}
+            {{note.text}}  {{note.lastUpdated | date: 'HH:mm dd.MM.yyyy'}}  <button class="glyphicon glyphicon-trash" (click)="remove(note._id)"></button>
         </li>
     </ul>
 </div>
+

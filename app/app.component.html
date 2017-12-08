@@ -1,8 +1,21 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <div class="navbar-brand">Notes tutorial app</div>
+        <!--<div class="navbar-header">-->
+            <!--<div class="navbar-brand">Notes tutorial app</div>-->
+        <!--</div>-->
+        <div class="navbar-brand" routerLink="/" style="cursor:hand">
+            Notes tutorial app
         </div>
+        <div class="navbar-form navbar-right">
+            <login-form>
+                <a class="btn btn-primary" routerLink="/register">Register</a>
+            </login-form>
+        </div>
+
+        <!--<div class="navbar-form navbar-right">-->
+            <!--<a class="btn btn-primary" routerLink="/register">Register</a>-->
+        <!--</div>-->
+
     </div>
 </nav>
 
@@ -18,13 +31,8 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <notes [section]="section"></notes>
-        </div>
-        <div class="col-md-4">
-            <sections (sectionChanged)="setSection($event)"></sections>
-        </div>
-    </div>
-</div>
+
+<router-outlet>
+    <!--replaced by -->
+</router-outlet>
+

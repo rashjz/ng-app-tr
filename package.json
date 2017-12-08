@@ -25,7 +25,7 @@
     "express-session": "^1.15.6",
     "nodemon": "^1.12.4",
     "reflect-metadata": "^0.1.8",
-    "rxjs": "^5.1.0",
+    "rxjs": "5.5.5",
     "systemjs": "^0.20.19",
     "zone.js": "^0.8.4",
     "mongodb": "*"

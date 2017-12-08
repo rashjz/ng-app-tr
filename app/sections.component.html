@@ -1,14 +1,17 @@
 <div class="input-group" style="padding-bottom:20px">
-    <input type="text" class="form-control" placeholder="New section name">
+    <input type="text" class="form-control" placeholder="New section name" #newSection>
+    <!--<input type="text" class="form-control" placeholder="Section filter" #filter>-->
     <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Add</button>
+        <button class="btn btn-default" type="button" (click)="addSection(newSection)">Add</button>
     </span>
 </div>
 
 <ul class="list-group">
+
     <li *ngFor="let section of sections"
         [ngClass]="{active:section.title==activeSection }"
         (click)="showSection(section)" class="list-group-item">
-        {{section.title}}
+         <a [routerLink]="['/viewSection',section]">{{section.title}}</a> <button class="glyphicon glyphicon-trash"  (click)="remove(section._id)"></button>
     </li>
+
 </ul>

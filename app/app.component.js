@@ -10,16 +10,9 @@ var core_1 = require("@angular/core");
 var AppComponent = /** @class */ (function () {
     function AppComponent() {
     }
-    AppComponent.prototype.setSection = function (section) {
-        this.section = section;
-    };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            // template: `
-            //     <h1>Hello Angular2 App</h1>
-            //     <br>Your name: <input type="text" [(ngModel)]="name">
-            //     <p></p>Hello, {{name}} from Angular! `
             templateUrl: 'app/app.component.html'
         })
     ], AppComponent);

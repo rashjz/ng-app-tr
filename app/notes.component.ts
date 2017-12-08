@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 import {Observable} from 'rxjs/Rx';
 import {notEqual} from "assert";
+import {NotesServerService} from "./services/NotesServerService";
 
 
 @Component({
@@ -20,18 +21,18 @@ export class NotesComponent implements OnChanges {
     notes: Note[] = [];
     @Input() section: string;
 
-    constructor(private http: Http){
 
-    }
+    constructor(private http:Http, private notesServer: NotesServerService) {}
 
     ngOnChanges() {
         this.readNotes();
     }
 
     readNotes() {
-        this.getNotes().subscribe(notes => { //updated then to subscribe
-            this.notes = notes;
-        });
+        // this.getNotes().subscribe(notes => { //updated then to subscribe
+        //     this.notes = notes;
+        // });
+
     }
 
     addNote(note: Note) {
@@ -43,19 +44,10 @@ export class NotesComponent implements OnChanges {
 
     }
 
-    getNotes(): Observable<Note[]> { //updated from Promise Observable
-        // return this.http.get(this.notesUrl)
-        //     .toPromise()
-        //     .then(response => response.json() as Note[]);
-        //
-        let params: URLSearchParams = new URLSearchParams();
-        params.set('section', this.section);
-        return this.http.get(this.notesUrl, {search: params})
-            .map(response => response.json() as Note[]);
-    }
+
 
     add() {
-        let note = {_id: this.text, text: this.text, lastUpdated: this.lastUpdated, section: this.section};
+        let note = { text: this.text, lastUpdated: this.lastUpdated, section: this.section};
         // this.notes.push(note);
         // this.text = "";
         note.lastUpdated = (new Date()).getTime();
@@ -77,8 +69,11 @@ export class NotesComponent implements OnChanges {
 
 
 }
-interface Note {
-    _id: string;
+
+
+
+export  interface Note {
+    _id?: string;
     text: string;
     lastUpdated: number;
     section: string;

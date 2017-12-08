@@ -4,7 +4,8 @@
  */
 (function (global) {
   System.config({
-    paths: {
+      baseURL: "/",
+      paths: {
       // paths serve as alias
       'npm:': 'node_modules/'
     },

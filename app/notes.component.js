@@ -15,9 +15,11 @@ require("rxjs/add/operator/toPromise");
 var http_2 = require("@angular/http");
 require("rxjs/add/operator/map");
 require("rxjs/Rx");
+var NotesServerService_1 = require("./services/NotesServerService");
 var NotesComponent = /** @class */ (function () {
-    function NotesComponent(http) {
+    function NotesComponent(http, notesServer) {
         this.http = http;
+        this.notesServer = notesServer;
         this.notesUrl = '/notes'; // URL to web api
         this.notes = [];
     }
@@ -25,10 +27,9 @@ var NotesComponent = /** @class */ (function () {
         this.readNotes();
     };
     NotesComponent.prototype.readNotes = function () {
-        var _this = this;
-        this.getNotes().subscribe(function (notes) {
-            _this.notes = notes;
-        });
+        // this.getNotes().subscribe(notes => { //updated then to subscribe
+        //     this.notes = notes;
+        // });
     };
     NotesComponent.prototype.addNote = function (note) {
         var _this = this;
@@ -38,18 +39,8 @@ var NotesComponent = /** @class */ (function () {
             _this.readNotes();
         });
     };
-    NotesComponent.prototype.getNotes = function () {
-        // return this.http.get(this.notesUrl)
-        //     .toPromise()
-        //     .then(response => response.json() as Note[]);
-        //
-        var params = new http_2.URLSearchParams();
-        params.set('section', this.section);
-        return this.http.get(this.notesUrl, { search: params })
-            .map(function (response) { return response.json(); });
-    };
     NotesComponent.prototype.add = function () {
-        var note = { _id: this.text, text: this.text, lastUpdated: this.lastUpdated, section: this.section };
+        var note = { text: this.text, lastUpdated: this.lastUpdated, section: this.section };
         // this.notes.push(note);
         // this.text = "";
         note.lastUpdated = (new Date()).getTime();
@@ -75,7 +66,7 @@ var NotesComponent = /** @class */ (function () {
             selector: 'notes',
             templateUrl: 'app/notes.component.html'
         }),
-        __metadata("design:paramtypes", [http_1.Http])
+        __metadata("design:paramtypes", [http_1.Http, NotesServerService_1.NotesServerService])
     ], NotesComponent);
     return NotesComponent;
 }());
